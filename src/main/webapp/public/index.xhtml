@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.template}">
+
+    <ui:define name="title">
+			Mural
+	</ui:define>
+
+	<ui:define name="description">
+		- Adicione tarefas para se manter organizado
+	</ui:define>
+	 
+    <ui:define name="body">
+ 
+		<div class="box box-solid box-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">Lista de Tarefas</h3>
+				<div class="box-tools pull-right">
+					<span class="label label-warning"></span>
+				</div>
+				<!-- /.box-tools -->
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+							
+					<div class="ui-g-3" style="padding-top:0px;">
+						<!-- small box -->
+					   	<div class="small-box bg-azul">
+					     	<div class="inner">
+					       		<h4>Residencial</h4>					
+					      		<h5>Informações sobre residências</h5>
+					     	</div>					     	
+					     	<div class="icon">
+					       		<i class="fa fa-home"></i>
+					     	</div>
+					     	<a href="informacoesresidenciais.jsf" class="small-box-footer">Responder Formulário <i class="fa fa-arrow-circle-right"></i></a>
+					   	</div>
+					</div>					
+				
+			</div>
+			<!-- /.box-body -->
+			<div class="box-footer">
+				
+			</div>
+			<!-- box-footer -->
+		</div>
+		<!-- /.box -->
+			
+		<style type="text/css">
+			.bg-azul{
+				background-color: #0191C8 !important;
+				color: white!important;
+			}
+		</style>
+    </ui:define>
+   
+</ui:composition>
