@@ -2,7 +2,9 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="#{layoutMB.template}">
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="#{layoutMB.template}"
+                xmlns:h="http://java.sun.com/jsf/html">
 
     <ui:define name="title">
 			Mural
@@ -13,45 +15,117 @@
 	</ui:define>
 	 
     <ui:define name="body">
- 
-		<div class="box box-solid box-primary">
-			<div class="box-header with-border">
-				<h3 class="box-title">Lista de Tarefas</h3>
-				<div class="box-tools pull-right">
-					<span class="label label-warning"></span>
-				</div>
-				<!-- /.box-tools -->
-			</div>
-			<!-- /.box-header -->
-			<div class="box-body">
-							
-					<div class="ui-g-3" style="padding-top:0px;">
-						<!-- small box -->
-					   	<div class="small-box bg-azul">
-					     	<div class="inner">
-					       		<h4>Residencial</h4>					
-					      		<h5>Informações sobre residências</h5>
-					     	</div>					     	
-					     	<div class="icon">
-					       		<i class="fa fa-home"></i>
-					     	</div>
-					     	<a href="informacoesresidenciais.jsf" class="small-box-footer">Responder Formulário <i class="fa fa-arrow-circle-right"></i></a>
-					   	</div>
-					</div>					
-				
-			</div>
-			<!-- /.box-body -->
-			<div class="box-footer">
-				
-			</div>
-			<!-- box-footer -->
+ 		<div class="ui-g-4">
+			<!-- small box -->
+		   	<div class="small-box bg-cinza" style="margin: 0px;">
+		     	<div class="inner">
+		       		<h4>Tarefas</h4>					
+		      		<h5>Adicione um checklist com tarefas para cumprir.</h5>
+		     	</div>					     	
+		     	<div class="icon">
+		       		<i class="fa fa-plus-square-o"></i>
+		     	</div>
+		     	<a onclick="PF('criarTarefa').show();" class="small-box-footer">Adicionar Lista de Tarefas</a>
+		   	</div>
+		</div>	
+		
+		<div class="ui-g-12">
+		
 		</div>
-		<!-- /.box -->
+		
+		<p:repeat var="postit" value="#{postitMB.listPostit}">
+			<div class="ui-g-4">
+				<!-- small box -->
+			   	<div class="small-box #{postit.boFinalizado ? 'bg-verde': postit.stBackground}" style="margin: 0px;">
+			     	<div class="inner">
+			       		<h4>#{postit.stApelido}</h4>					
+			      		<h5 style="text-align: justify">#{postit.stDescricao}</h5>
+			     	</div>					     	
+			     	<div class="icon">
+			       		<i class="fa fa-home"></i>
+			     	</div>
+			     	<p:commandLink value="Lista de Atividades" update="listTask" onclick="PF('postit').show();" styleClass="small-box-footer" >
+			     		<f:setPropertyActionListener value="#{postit}" target="#{postitMB.postitView}" />
+			     	</p:commandLink>
+			     	
+			   	</div>
+			</div>					
+		</p:repeat>
+		
+		<p:dialog header="Adicione Tarefas" styleClass="box-solid box-success" widgetVar="criarTarefa" 
+		minHeight="100" modal="true" resizable="false" width="33%" appendTo="@(body)" closable="true">
+			
+		</p:dialog>
+		
+		<p:dialog header="Lista de Tarefas" styleClass="box-solid box-primary" widgetVar="postit" 
+		minHeight="100" modal="true" resizable="false" width="33%" appendTo="@(body)" closable="true">
+			<h:form id="listTask">
+				<div class="ui-g-12">
+					<p:dataScroller value="#{postitMB.postitView.listTarefas}" var="tarefa" chunkSize="10" mode="inline" scrollHeight="250">
+				 		<div>
+					 		<h:outputText value="#{tarefa.stDescricao}" styleClass="#{tarefa.boFinalizado ? 'task-finalizada' : '' }"/>	 						 		
+					 		<p:commandButton value="Remover" styleClass="btn-flat btn-xs btn-danger"
+					 			update="listTask" actionListener="#{postitMB.removerTask(tarefa)}" style="float: right;width:20%;"/>	
+					 		<p:commandButton rendered="#{!tarefa.boFinalizado}" value="Finalizar" actionListener="#{postitMB.finalizarTask(tarefa)}"
+					 			styleClass="btn-flat btn-xs btn-success" update="listTask" style="float: right;width:20%;"/>
+				 			<p:commandButton rendered="#{tarefa.boFinalizado}" value="Ativar" actionListener="#{postitMB.ativarTask(tarefa)}"
+				 			styleClass="btn-flat btn-xs btn-primary" update="listTask" style="float: right;width:20%;"/>
+				 		</div>	
+				 					 					 		
+				    	<hr style="width: 100%; color: gray; height: 1px; background-color:gray;margin-top: 7px; margin-bottom: 7px;" />				    	
+				    </p:dataScroller>
+				   	
+		            <p:inputText placeholder="Nova Tarefa" value="#{postitMB.stDescricaoTask}" style="width: 100%;"/>		        
+		            <p:commandButton value="Adicionar" actionListener="#{postitMB.addTask()}" update="listTask"
+		            	styleClass="btn-primary btn-xs" style="width: 25%; margin-top: 7px; float:right;"/>  
+			    
+				</div>
+			</h:form>
+		</p:dialog>
+			
 			
 		<style type="text/css">
+			.task-finalizada{
+				text-decoration: line-through;
+				color: green;
+			}
 			.bg-azul{
-				background-color: #0191C8 !important;
+				background-color: #4682B4 !important;
+				height: 150px;
 				color: white!important;
+			}
+			.bg-verde{
+				background-color: #50C878 !important;
+				height: 150px;
+				color: white !important;
+			}
+			.bg-cinza{
+				background-color: #C0C0C0 !important;
+				height: 150px;
+				color: white !important;
+			}
+			.bg-vermelho{
+				background-color: #CA3433 !important;
+				height: 150px;
+				color: white !important;
+			}
+			.bg-amarelo{
+				background-color: #FFBF00 !important;
+				height: 150px;
+				color: white !important;
+			}
+			.small-box>.small-box-footer {
+			    position: absolute;
+			    width:100%;
+			    bottom: 0px;
+			    text-align: center;
+			    padding: 3px 0;
+			    color: #fff;
+			    color: rgba(255,255,255,0.8);
+			    display: block;
+			    z-index: 10;
+			    background: rgba(0,0,0,0.1);
+			    text-decoration: none;
 			}
 		</style>
     </ui:define>
