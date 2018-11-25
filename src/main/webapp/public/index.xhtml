@@ -32,8 +32,8 @@
 		<div class="ui-g-12">
 		
 		</div>
-		
-		<p:repeat var="postit" value="#{postitMB.listPostit}">
+		<h:form id="mural">
+		<p:repeat  var="postit" value="#{postitMB.listPostit}">
 			<div class="ui-g-4">
 				<!-- small box -->
 			   	<div class="small-box #{postit.boFinalizado ? 'bg-verde': postit.stBackground}" style="margin: 0px;">
@@ -51,14 +51,64 @@
 			   	</div>
 			</div>					
 		</p:repeat>
+		</h:form>
 		
 		<p:dialog header="Adicione Tarefas" styleClass="box-solid box-success" widgetVar="criarTarefa" 
 		minHeight="100" modal="true" resizable="false" width="33%" appendTo="@(body)" closable="true">
-			
+			<p:ajax event="close" update="mural" />
+			<h:form>
+				<div class="ui-g-12">
+					<p:selectOneMenu value="#{postitMB.tipo}" var="tipo" converter="tipoConverter" >
+			            <f:selectItems value="#{postitMB.listTipos}" var="tipos" itemLabel="#{tipos.descricao}" itemValue="#{tipos}" />
+			             
+			             <p:column>
+			             	<div class="#{tipo.color}" style="height: 33px;">
+			                	
+			                </div>
+			            </p:column>	
+			            
+			            <p:column>
+			            	<h:outputText value="#{tipo.descricao}" />
+			            </p:column>
+			            		         
+			        </p:selectOneMenu>
+		        </div>		        		
+				<div class="ui-g-12">
+					<p:inputText id="tituloPositit" required="true" requiredMessage="Esse campo é obrigatório" value="#{postitMB.tituloPostit}"
+						placeholder="Coloque um título para sus lista de Tarefas" style="width:100%;"/>
+					<p:message for="tituloPositit">
+						<p:autoUpdate/>
+					</p:message>
+				</div>
+				
+				<div class="ui-g-12">
+					<p:inputTextarea id="descricaoPositit" required="true" requiredMessage="Esse campo é obrigatório" value="#{postitMB.descricaoPostit}"
+						placeholder="Adicione uma descrição...." style="width:100%;"/>
+					<p:message for="tituloPositit">
+						<p:autoUpdate/>
+					</p:message>
+				</div>
+				
+				<div class="ui-g-12">
+					<p:chips id="tarefasPositit" required="true" requiredMessage="Esse campo é obrigatório" value="#{postitMB.listTask}"
+						placeholder="Coloque suas tarefas..." styleClass="box-success" style="width:100% !important;"/>
+					<p:message for="tituloPositit">
+						<p:autoUpdate/>
+					</p:message>
+				</div>
+				
+				<div class="ui-g-6" style="float: right;">
+					<p:commandButton value="Adicionar Lista" update="@form mural" actionListener="#{postitMB.addPostit()}"
+						styleClass="btn-flat btn-primary" style="width:100%;"/>
+				</div>
+				
+				
+			</h:form>
 		</p:dialog>
 		
 		<p:dialog header="Lista de Tarefas" styleClass="box-solid box-primary" widgetVar="postit" 
 		minHeight="100" modal="true" resizable="false" width="33%" appendTo="@(body)" closable="true">
+			<p:ajax event="close" update="mural" />
 			<h:form id="listTask">
 				<div class="ui-g-12">
 					<p:dataScroller value="#{postitMB.postitView.listTarefas}" var="tarefa" chunkSize="10" mode="inline" scrollHeight="250">
@@ -126,6 +176,17 @@
 			    z-index: 10;
 			    background: rgba(0,0,0,0.1);
 			    text-decoration: none;
+			}
+			.ui-chips-container {
+			    padding: 0;
+			    clear: left;
+			    cursor: text;
+			    list-style-type: none;
+			    margin: 0;
+			    min-height: 1px;
+			    overflow: hidden;
+			    width: 100%;
+			    height: 150px;
 			}
 		</style>
     </ui:define>
