@@ -3,12 +3,7 @@ package desafio.esig.todo.websconsume;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.json.JsonArray;
-import javax.json.JsonValue;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -42,7 +37,7 @@ public class RestConsume {
 		ResteasyClient client = new ResteasyClientBuilder().build();
 		ResteasyWebTarget target = client.target(url + "/postit/create");
 		target.request(MediaType.APPLICATION_JSON_TYPE).post(
-				Entity.entity(new Gson().toJson(postit), MediaType.APPLICATION_JSON), Postit.class
+				Entity.entity(new Gson().toJson(postit), MediaType.APPLICATION_JSON), String.class
 				);
 	}
 	
@@ -68,7 +63,7 @@ public class RestConsume {
 		ResteasyClient client = new ResteasyClientBuilder().build();
 		ResteasyWebTarget target = client.target(url + "/postit/update");
 		target.request(MediaType.APPLICATION_JSON_TYPE).put(
-				Entity.entity(postit, MediaType.APPLICATION_JSON), String.class
+				Entity.entity(new Gson().toJson(postit), MediaType.APPLICATION_JSON), String.class
 				);
 	}
 	
