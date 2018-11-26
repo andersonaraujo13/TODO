@@ -49,6 +49,11 @@
             <version>${adminfaces.version}</version>
             <!--<classifier>dev</classifier> uncompressed theme.css (note that you need to exclude admin-theme brought by admin-template dependency)-->
         </dependency>
+        <dependency>
+		    <groupId>org.jboss.resteasy</groupId>
+		    <artifactId>resteasy-client</artifactId>
+		    <version>3.0.2.Final</version>
+		</dependency>
     </dependencies>
     <build>
         <resources>
