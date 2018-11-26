@@ -33,7 +33,7 @@
 		
 		</div>
 		<h:form id="mural">
-		<p:repeat  var="postit" value="#{postitMB.listPostit}">
+		<p:repeat var="postit" value="#{postitMB.listPostit}">
 			<div class="ui-g-4">
 				<!-- small box -->
 			   	<div class="small-box #{postit.boFinalizado ? 'bg-verde': postit.stBackground}" style="margin: 0px;">
@@ -44,7 +44,7 @@
 			     	<div class="icon">
 			       		<i class="fa fa-home"></i>
 			     	</div>
-			     	<p:commandLink value="Lista de Atividades" update="listTask" onclick="PF('postit').show();" styleClass="small-box-footer" >
+			     	<p:commandLink id="openPostit" value="Lista de Atividades" update="listTask" onclick="PF('postit').show();" styleClass="small-box-footer" >
 			     		<f:setPropertyActionListener value="#{postit}" target="#{postitMB.postitView}" />
 			     	</p:commandLink>
 			     	
@@ -58,8 +58,8 @@
 			<p:ajax event="close" update="mural" />
 			<h:form>
 				<div class="ui-g-12">
-					<p:selectOneMenu value="#{postitMB.tipo}" var="tipo" converter="tipoConverter" >
-			            <f:selectItems value="#{postitMB.listTipos}" var="tipos" itemLabel="#{tipos.descricao}" itemValue="#{tipos}" />
+					<p:selectOneMenu id="selectTipo" value="#{postitMB.tipo}" var="tipo" converter="tipoConverter" >
+			            <f:selectItems id="itensTipo" value="#{postitMB.listTipos}" var="tipos" itemLabel="#{tipos.descricao}" itemValue="#{tipos}" />
 			             
 			             <p:column>
 			             	<div class="#{tipo.color}" style="height: 33px;">
@@ -68,7 +68,7 @@
 			            </p:column>	
 			            
 			            <p:column>
-			            	<h:outputText value="#{tipo.descricao}" />
+			            	<h:outputText id="outputTipo"  value="#{tipo.descricao}" />
 			            </p:column>
 			            		         
 			        </p:selectOneMenu>
@@ -76,29 +76,29 @@
 				<div class="ui-g-12">
 					<p:inputText id="tituloPositit" required="true" requiredMessage="Esse campo é obrigatório" value="#{postitMB.tituloPostit}"
 						placeholder="Coloque um título para sus lista de Tarefas" style="width:100%;"/>
-					<p:message for="tituloPositit">
+					<p:message id="msgtituloPositit" for="tituloPositit" display="text">
 						<p:autoUpdate/>
 					</p:message>
 				</div>
 				
 				<div class="ui-g-12">
 					<p:inputTextarea id="descricaoPositit" required="true" requiredMessage="Esse campo é obrigatório" value="#{postitMB.descricaoPostit}"
-						placeholder="Adicione uma descrição...." style="width:100%;"/>
-					<p:message for="tituloPositit">
+						placeholder="Adicione uma descrição." style="width:100%;"/>
+					<p:message id="msgdescricaoPositit" for="tituloPositit" display="text">
 						<p:autoUpdate/>
 					</p:message>
 				</div>
 				
 				<div class="ui-g-12">
 					<p:chips id="tarefasPositit" required="true" requiredMessage="Esse campo é obrigatório" value="#{postitMB.listTask}"
-						placeholder="Coloque suas tarefas..." styleClass="box-success" style="width:100% !important;"/>
-					<p:message for="tituloPositit">
+						placeholder="Coloque suas tarefas." styleClass="box-success" style="width:100% !important;"/>
+					<p:message id="msgtarefasPositit" for="tituloPositit" display="text">
 						<p:autoUpdate/>
 					</p:message>
 				</div>
 				
 				<div class="ui-g-6" style="float: right;">
-					<p:commandButton value="Adicionar Lista" update="@form mural" actionListener="#{postitMB.addPostit()}"
+					<p:commandButton id="btnAdicionarLista" value="Adicionar Lista" update="@form" actionListener="#{postitMB.addPostit()}"
 						styleClass="btn-flat btn-primary" style="width:100%;"/>
 				</div>
 				
@@ -111,22 +111,22 @@
 			<p:ajax event="close" update="mural" />
 			<h:form id="listTask">
 				<div class="ui-g-12">
-					<p:dataScroller value="#{postitMB.postitView.listTarefas}" var="tarefa" chunkSize="10" mode="inline" scrollHeight="250">
+					<p:dataScroller id="dataListTask" value="#{postitMB.postitView.listTarefas}" var="tarefa" chunkSize="10" mode="inline" scrollHeight="250">
 				 		<div>
-					 		<h:outputText value="#{tarefa.stDescricao}" styleClass="#{tarefa.boFinalizado ? 'task-finalizada' : '' }"/>	 						 		
-					 		<p:commandButton value="Remover" styleClass="btn-flat btn-xs btn-danger"
-					 			update="listTask" actionListener="#{postitMB.removerTask(tarefa)}" style="float: right;width:20%;"/>	
-					 		<p:commandButton rendered="#{!tarefa.boFinalizado}" value="Finalizar" actionListener="#{postitMB.finalizarTask(tarefa)}"
-					 			styleClass="btn-flat btn-xs btn-success" update="listTask" style="float: right;width:20%;"/>
-				 			<p:commandButton rendered="#{tarefa.boFinalizado}" value="Ativar" actionListener="#{postitMB.ativarTask(tarefa)}"
-				 			styleClass="btn-flat btn-xs btn-primary" update="listTask" style="float: right;width:20%;"/>
+					 		<h:outputText id="inputNomeTask" value="#{tarefa.stDescricao}" styleClass="#{tarefa.boFinalizado ? 'task-finalizada' : '' }"/>	 						 		
+					 		<p:commandButton id="btnRemoverTask" value="Remover" styleClass="btn-flat btn-xs btn-danger"
+					 			update="@form listTask" actionListener="#{postitMB.removerTask(tarefa)}" style="float: right;width:20%;"/>	
+					 		<p:commandButton id="btnFinalizarTask" rendered="#{!tarefa.boFinalizado}" value="Finalizar" actionListener="#{postitMB.finalizarTask(tarefa)}"
+					 			styleClass="btn-flat btn-xs btn-success" update="@form listTask" style="float: right;width:20%;"/>
+				 			<p:commandButton id="btnAtivarTask" rendered="#{tarefa.boFinalizado}" value="Ativar" actionListener="#{postitMB.ativarTask(tarefa)}"
+				 			styleClass="btn-flat btn-xs btn-primary" update="@form listTask" style="float: right;width:20%;"/>
 				 		</div>	
 				 					 					 		
 				    	<hr style="width: 100%; color: gray; height: 1px; background-color:gray;margin-top: 7px; margin-bottom: 7px;" />				    	
 				    </p:dataScroller>
 				   	
-		            <p:inputText placeholder="Nova Tarefa" value="#{postitMB.stDescricaoTask}" style="width: 100%;"/>		        
-		            <p:commandButton value="Adicionar" actionListener="#{postitMB.addTask()}" update="listTask"
+		            <p:inputText id="inputNovaTask" placeholder="Nova Tarefa" value="#{postitMB.stDescricaoTask}" style="width: 100%;"/>		        
+		            <p:commandButton id="btnAdicionarTask" value="Adicionar" actionListener="#{postitMB.addTask()}" update="listTask"
 		            	styleClass="btn-primary btn-xs" style="width: 25%; margin-top: 7px; float:right;"/>  
 			    
 				</div>

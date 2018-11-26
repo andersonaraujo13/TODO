@@ -14,4 +14,12 @@ public class TaskService {
 	public void atualizar(Task task) {
 		consume.updateTask(task);
 	}
+	
+	public void remover(int id) {
+		consume.deleteTask(id);
+	}
+	
+	public Task create(Task task) {
+		return consume.createTask(task);
+	}
 }

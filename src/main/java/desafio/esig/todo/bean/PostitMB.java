@@ -6,9 +6,13 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.SerializationUtils;
+import org.omnifaces.util.Faces;
+import org.omnifaces.util.Messages;
 import org.primefaces.PrimeFaces;
 
 import desafio.esig.todo.model.Postit;
@@ -138,16 +142,26 @@ public class PostitMB implements Serializable {
 		updateListPostit();
 	}	
 	public void removerTask(Task task) {
-		postitView.getListTarefas().remove(task);
+		postitView.getListTarefas().remove(task);		
+		taskService.remover(task.getId());
 	}
 	public void addTask() {
-		Task task = new Task();
-		task.setStDescricao(stDescricaoTask);
-		task.setCePostit(postitView);
-		task.setBoFinalizado(false);
+		if(stDescricaoTask == null || stDescricaoTask.equals("")) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", "Coloque uma descrição na tarefa.");
+	        PrimeFaces.current().dialog().showMessageDynamic(message);
+		} else {
+			Task task = new Task();
+			task.setStDescricao(stDescricaoTask);
+			task.setCePostit(postitView);
+			task.setBoFinalizado(false);
+			
+			task.setCePostit(SerializationUtils.clone(postitView));
+			task = taskService.create(task);
+			
+			postitView.getListTarefas().add(task);
+			stDescricaoTask = new String();
+		}
 		
-		postitView.getListTarefas().add(task);
-		stDescricaoTask = new String();
 	}
 	
 	public void addPostit() {
@@ -177,6 +191,9 @@ public class PostitMB implements Serializable {
 		updateListPostit();
 		
 		PrimeFaces.current().executeScript("PF('criarTarefa').hide();");
+		
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", "Lista de tarefas cadastradas com sucesso.");
+        PrimeFaces.current().dialog().showMessageDynamic(message);
 	}
 	
 }
